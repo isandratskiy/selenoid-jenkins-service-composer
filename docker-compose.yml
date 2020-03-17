@@ -1,6 +1,22 @@
 version: '3'
 
 services:
+  jenkins:
+    container_name: jenkins
+    network_mode: bridge
+    ports:
+      - 8080:8080
+      - 50000:50000
+    image: jenkins/jenkins
+    user: root
+    volumes:
+      - $PWD/jenkins:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - selenoid
+    links:
+      - selenoid
+
   selenoid:
     container_name: selenoid
     network_mode: bridge
@@ -27,22 +43,6 @@ services:
     command: [
       "--selenoid-uri", "http://selenoid:4444"
       ]
-    depends_on:
-      - selenoid
-    links:
-      - selenoid
-
-  jenkins:
-    container_name: jenkins
-    network_mode: bridge
-    ports:
-      - 8080:8080
-      - 50000:50000
-    image: jenkins/jenkins
-    user: root
-    volumes:
-      - $PWD/jenkins:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - selenoid
     links:
