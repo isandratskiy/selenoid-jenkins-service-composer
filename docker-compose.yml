@@ -21,7 +21,7 @@ services:
     container_name: selenoid
     network_mode: bridge
     ports:
-      - "4444:4444"
+      - 4444:4444
     image: aerokube/selenoid:latest-release
     volumes:
       - "$PWD:/etc/selenoid"
@@ -38,7 +38,7 @@ services:
     container_name: selenoid-ui
     network_mode: bridge
     ports:
-      - "8081:8080"
+      - 8081:8080
     image: aerokube/selenoid-ui:latest-release
     command: [
       "--selenoid-uri", "http://selenoid:4444"
