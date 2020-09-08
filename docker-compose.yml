@@ -49,5 +49,6 @@ services:
       ]
     depends_on:
       - selenoid
+      - jenkins
     networks:
       - selenoid-net
