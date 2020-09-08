@@ -1,9 +1,12 @@
-version: '3'
+version: "3.7"
+
+networks:
+  selenoid-net:
+    name: selenoid-net
 
 services:
   jenkins:
     container_name: jenkins
-    network_mode: bridge
     ports:
       - 8080:8080
       - 50000:50000
@@ -12,16 +15,13 @@ services:
     volumes:
       - $PWD/jenkins:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-      - selenoid
-    links:
-      - selenoid
+    networks:
+      - selenoid-net
 
   selenoid:
-    container_name: selenoid
-    network_mode: bridge
+    container_name: jenkins-selenoid
     ports:
-      - 4444:4444
+      - 4445:4444
     image: aerokube/selenoid:latest-release
     volumes:
       - "$PWD:/etc/selenoid"
@@ -31,19 +31,23 @@ services:
       "-service-startup-timeout", "3m0s", 
       "-session-attempt-timeout", "3m0s", 
       "-session-delete-timeout", "3m0s", 
-      "-timeout", "5m0s"
+      "-timeout", "5m0s",
+      "-container-network", "selenoid-net"
       ]
+    depends_on:
+      - jenkins
+    networks:
+      - selenoid-net
 
   selenoid-ui:
-    container_name: selenoid-ui
-    network_mode: bridge
+    container_name: jenkins-selenoid-ui
     ports:
-      - 8081:8080
+      - 8082:8080
     image: aerokube/selenoid-ui:latest-release
     command: [
       "--selenoid-uri", "http://selenoid:4444"
       ]
     depends_on:
       - selenoid
-    links:
-      - selenoid
+    networks:
+      - selenoid-net

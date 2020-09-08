@@ -1,11 +1,12 @@
 {
     "chrome": {
-        "default": "80.0",
+        "default": "85.0",
         "versions": {
-            "80.0": {
-                "image": "selenoid/vnc_chrome:80.0",
+            "85.0": {
+                "image": "selenoid/vnc_chrome:85.0",
                 "port": "4444",
                 "path": "/",
+                "shmSize": 268435456,
                 "tmpfs": {
                     "/tmp": "size=512m"
                 }
